@@ -8,10 +8,9 @@ A production-grade **Spring Boot REST API** for managing shared group expenses a
 
 - **Candidate GitHub Username**: `fabmeep`
 - **Calculated `service_charge_pct`**: `0%`
-  - **Computation**: 
-    $$\text{ASCII sum} = 'f'(102) + 'a'(97) + 'b'(98) + 'm'(109) + 'e'(101) + 'e'(101) + 'p'(112) = 720$$
-    $$\text{service\_charge\_pct} = 720 \pmod{10} = \mathbf{0}$$
-- **`service_charge_amount`**: $0\% \times \text{Total Expenses} = \mathbf{0.00}$
+  - **ASCII sum**: `'f'(102) + 'a'(97) + 'b'(98) + 'm'(109) + 'e'(101) + 'e'(101) + 'p'(112) = 720`
+  - **Modulo 10 calculation**: `720 % 10 = 0%`
+- **`service_charge_amount`**: `0% × Total Expenses = 0.00`
 
 > Both fields are computed dynamically at runtime by the `PersonalizationService` and included in every settlement summary response.
 
@@ -21,7 +20,7 @@ A production-grade **Spring Boot REST API** for managing shared group expenses a
 
 > **"What was the hardest design decision you made while building this, and what trade-off did you accept?"**
 
-The hardest architectural decision was balancing **exact financial precision during uneven expense splitting** against a **greedy debt settlement algorithm**. To eliminate floating-point drift and 1-cent rounding discrepancies on non-divisible amounts, we used `BigDecimal` and deterministically allocated remainder cents so individual shares always sum to the exact expense. For settlements, we implemented a greedy min-cash-flow algorithm ($O(N \log N)$) that aggregates net balances and directly pairs the largest debtors with the largest creditors. **The trade-off accepted** is that global debt minimization abstracts away direct itemized "who paid for whom" relationships in exchange for minimizing total bank transfers and eliminating circular debts.
+The hardest architectural decision was balancing **exact financial precision during uneven expense splitting** against a **greedy debt settlement algorithm**. To eliminate floating-point drift and 1-cent rounding discrepancies on non-divisible amounts, we used `BigDecimal` and deterministically allocated remainder cents so individual shares always sum to the exact expense. For settlements, we implemented a greedy min-cash-flow algorithm (O(N log N)) that aggregates net balances and directly pairs the largest debtors with the largest creditors. **The trade-off accepted** is that global debt minimization abstracts away direct itemized "who paid for whom" relationships in exchange for minimizing total bank transfers and eliminating circular debts.
 
 ---
 
